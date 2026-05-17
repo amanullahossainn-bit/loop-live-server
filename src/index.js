@@ -5,6 +5,7 @@
 import { spawn } from "node:child_process";
 import { mkdtemp, writeFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
+import http from "node:http";
 import path from "node:path";
 import { createClient } from "@supabase/supabase-js";
 import ws from "ws";
@@ -315,3 +316,14 @@ process.on("SIGTERM", async () => {
 });
 
 controlLoop();
+
+const PORT = process.env.PORT || 3000;
+
+http
+  .createServer((req, res) => {
+    res.writeHead(200);
+    res.end("LoopLive worker running");
+  })
+  .listen(PORT, () => {
+    console.log("Server listening on", PORT);
+  });
